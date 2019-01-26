@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from src import Pool
 
 
@@ -16,7 +16,7 @@ def main():
         body_json = request.json
         pool.push(body_json)
         response = {'result': 'success'}
-    return json.dumps(response)
+    return jsonify(response)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
