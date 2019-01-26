@@ -11,12 +11,24 @@ pool = Pool()
 
 request_schema = {
     "type": "object",
-    "properties":{
+    "definitions": {
+        "item": {
+            "type": "object",
+            "properties": {
+                "item_id": {"type": "number"},
+                "volume": {"type": "number"}
+            },
+            "required": ["item_id", "volume"]
+        }
+    },
+    "properties": {
         "user_id": {"type": "number"},
         "items": {
-            "type": "array"
+            "type": "array",
+            "items": {"$ref": "#/definitions/item"}
         }
-    }
+    },
+    "required": ["user_id", "items"]
 }
 
 @app.route('/', methods=['GET','POST'])
