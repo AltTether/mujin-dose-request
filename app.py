@@ -1,5 +1,6 @@
 import json
 
+from jsonschema import validate
 from flask import Flask, request, jsonify
 from src import Pool
 
@@ -7,15 +8,29 @@ from src import Pool
 app = Flask(__name__)
 pool = Pool()
 
+
+request_schema = {
+    "type": "object",
+    "properties":{
+        "user_id": {"type": "number"},
+        "items": {
+            "type": "array"
+        }
+    }
+}
+
 @app.route('/', methods=['GET','POST'])
 def main():
     response = None
     if request.method == 'GET':
         response = pool.pop()
+
     elif request.method == 'POST':
         body_json = request.json
+        validate(body_json, request_schema)
         pool.push(body_json)
         response = {'result': 'success'}
+
     return jsonify(response)
 
 if __name__ == "__main__":
