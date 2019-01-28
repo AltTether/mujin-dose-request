@@ -16,9 +16,11 @@ request_schema = {
             "type": "object",
             "properties": {
                 "item_id": {"type": "number"},
+                "item_name": {"type": "string"},
+                "value": {"type": "number"},
                 "volume": {"type": "number"}
             },
-            "required": ["item_id", "volume"]
+            "required": ["item_id", "item_name", "value", "volume"]
         }
     },
     "properties": {
@@ -36,12 +38,15 @@ def main():
     response = None
     if request.method == 'GET':
         response = pool.pop()
-
+        
     elif request.method == 'POST':
         body_json = request.json
-        validate(body_json, request_schema)
-        pool.push(body_json)
-        response = {'result': 'success'}
+        try:
+            validate(body_json, request_schema)
+            pool.push(body_json)
+            response = {'result': 'success'}
+        except Exception:
+            response = {'result': 'failed'}
 
     return jsonify(response)
 
