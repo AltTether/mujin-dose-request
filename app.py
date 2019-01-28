@@ -3,11 +3,12 @@ import json
 from jsonschema import validate
 from flask import Flask, request, jsonify
 from src import Pool
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 pool = Pool()
-
+CORS(app)
 
 request_schema = {
     "type": "object",
